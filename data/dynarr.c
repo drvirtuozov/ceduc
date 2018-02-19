@@ -3,7 +3,7 @@
 #include <string.h>
 
 typedef struct {
-  int len;
+  unsigned int len;
   size_t size;
   int arr[2];
 } dynarr;
@@ -23,18 +23,24 @@ int main() {
     return 1;
   }
 
-  for (int i = 0; i < 10; i++) {
-    printf("len: %d\n", dynarr_push(&arr, i));
+  for (int i = 0; i < 50; i++) {
+    dynarr_push(&arr, i);
+    printf("\n%s\n", dynarr_string(arr));
   }
 
-  printf("\n%s\n", dynarr_string(arr));
+  for (int i = 0; i < 50; i++) {
+    dynarr_pop(arr);
+    printf("\n%s\n", dynarr_string(arr));
+  }
+
   return 0;
 }
 
 dynarr *dynarr_new() {
   dynarr *ptr = (dynarr *)malloc(sizeof(dynarr));
 
-  if (!ptr) {
+  if (ptr == NULL) {
+    printf("failed to create a dynamic array\n");
     return NULL;
   }
 
@@ -47,18 +53,19 @@ int dynarr_push(dynarr **ptr, int val) {
   unsigned int cap = (*ptr)->size / sizeof((*ptr)->arr[0]);
 
   if ((*ptr)->len >= cap) {
-    (*ptr)->size = (*ptr)->size * 2;
-    *ptr = (dynarr *)realloc(*ptr, sizeof(dynarr) + (*ptr)->size);
+    dynarr *p = (dynarr *)realloc(*ptr, sizeof(dynarr) + (*ptr)->size * 2);
 
-    if (!ptr) {
+    if (p == NULL) {
       printf("failed to realloc memory");
       return (*ptr)->len;
     }
+
+    *ptr = p;
+    (*ptr)->size = (*ptr)->size * 2;
   }
 
   (*ptr)->arr[(*ptr)->len] = val;
-  (*ptr)->len++;
-  return (*ptr)->len;
+  return ++(*ptr)->len;
 }
 
 char *dynarr_string(dynarr *ptr) {
@@ -71,4 +78,22 @@ char *dynarr_string(dynarr *ptr) {
   }
 
   return str;
+}
+
+int dynarr_pop(dynarr *ptr) {
+  unsigned int cap = ptr->size / sizeof(ptr->arr[0]);
+
+  if (ptr->len > 0 && ptr->len < cap / 2) {
+    dynarr *p = (dynarr *)realloc(ptr, ptr->size / 2);
+
+    if (p == NULL) {
+      printf("failed to realloc memory");
+      return ptr->len;
+    }
+
+    ptr = p;
+    ptr->size = ptr->size / 2;
+  }
+
+  return --ptr->len;
 }
