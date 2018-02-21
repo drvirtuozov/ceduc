@@ -18,7 +18,7 @@ dynarr *dynarr_new();
 int main() {
   dynarr *arr = dynarr_new();
 
-  if (!arr) {
+  if (arr == NULL) {
     printf("failed to create a dynarr\n");
     return 1;
   }
@@ -29,7 +29,7 @@ int main() {
   }
 
   for (int i = 0; i < 50; i++) {
-    dynarr_pop(arr);
+    dynarr_shift(arr);
     printf("\n%s\n", dynarr_string(arr));
   }
 
@@ -83,17 +83,29 @@ char *dynarr_string(dynarr *ptr) {
 int dynarr_pop(dynarr *ptr) {
   unsigned int cap = ptr->size / sizeof(ptr->arr[0]);
 
-  if (ptr->len > 0 && ptr->len < cap / 2) {
-    dynarr *p = (dynarr *)realloc(ptr, ptr->size / 2);
+  if (ptr->len > 0) {
+    if (ptr->len < cap / 2) {
+      dynarr *p = (dynarr *)realloc(ptr, ptr->size / 2);
 
-    if (p == NULL) {
-      printf("failed to realloc memory");
-      return ptr->len;
+      if (p == NULL) {
+        printf("failed to realloc memory");
+        return ptr->len;
+      }
+
+      ptr = p;
+      ptr->size = ptr->size / 2;
     }
 
-    ptr = p;
-    ptr->size = ptr->size / 2;
+    return --ptr->len;
   }
 
-  return --ptr->len;
+  return ptr->len;
+}
+
+int dynarr_shift(dynarr *ptr) {
+  for (unsigned int i = 1; i < ptr->len; i++) {
+    ptr->arr[i - 1] = ptr->arr[i];
+  }
+
+  return dynarr_pop(ptr);
 }
