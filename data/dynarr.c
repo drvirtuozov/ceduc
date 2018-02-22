@@ -8,10 +8,12 @@ typedef struct {
   int arr[2];
 } dynarr;
 
-int dynarr_push(dynarr **, int);
-int dynarr_pop(dynarr *);
-int dynarr_shift(dynarr *);
-int dynarr_unshift(dynarr *, int);
+unsigned int dynarr_push(dynarr **, int);
+unsigned int dynarr_pop(dynarr *);
+unsigned int dynarr_shift(dynarr *);
+unsigned int dynarr_unshift(dynarr **, int);
+int dynarr_get(dynarr *, unsigned int);
+unsigned int dynarr_set(dynarr *, unsigned int i, int val);
 char *dynarr_string(dynarr *);
 dynarr *dynarr_new();
 
@@ -24,13 +26,18 @@ int main() {
   }
 
   for (int i = 0; i < 50; i++) {
-    dynarr_push(&arr, i);
-    printf("\n%s\n", dynarr_string(arr));
+    unsigned int len = dynarr_push(&arr, i);
+    printf("\n(len:%d) %s\n", len, dynarr_string(arr));
   }
 
   for (int i = 0; i < 50; i++) {
-    dynarr_shift(arr);
-    printf("\n%s\n", dynarr_string(arr));
+    unsigned int len = dynarr_shift(arr);
+    printf("\n(len:%d) %s\n", len, dynarr_string(arr));
+  }
+
+  for (int i = 0; i < 50; i++) {
+    unsigned int len = dynarr_unshift(&arr, i);
+    printf("\n(len:%d) %s\n", len, dynarr_string(arr));
   }
 
   return 0;
@@ -49,7 +56,7 @@ dynarr *dynarr_new() {
   return ptr;
 }
 
-int dynarr_push(dynarr **ptr, int val) {
+unsigned int dynarr_push(dynarr **ptr, int val) {
   unsigned int cap = (*ptr)->size / sizeof((*ptr)->arr[0]);
 
   if ((*ptr)->len >= cap) {
@@ -80,7 +87,7 @@ char *dynarr_string(dynarr *ptr) {
   return str;
 }
 
-int dynarr_pop(dynarr *ptr) {
+unsigned int dynarr_pop(dynarr *ptr) {
   unsigned int cap = ptr->size / sizeof(ptr->arr[0]);
 
   if (ptr->len > 0) {
@@ -102,10 +109,30 @@ int dynarr_pop(dynarr *ptr) {
   return ptr->len;
 }
 
-int dynarr_shift(dynarr *ptr) {
+unsigned int dynarr_shift(dynarr *ptr) {
   for (unsigned int i = 1; i < ptr->len; i++) {
     ptr->arr[i - 1] = ptr->arr[i];
   }
 
   return dynarr_pop(ptr);
+}
+
+unsigned int dynarr_unshift(dynarr **ptr, int val) {
+  unsigned int len = dynarr_push(ptr, val);
+
+  if (len == 1) {
+    return len;
+  }
+
+  for (unsigned int i = len - 1; i > 0; i--) {
+    (*ptr)->arr[i] = (*ptr)->arr[i - 1];
+  }
+
+  (*ptr)->arr[0] = val;
+  return len;
+}
+
+int dynarr_get(dynarr *ptr, unsigned int i) { return ptr->arr[i]; }
+unsigned int dynarr_set(dynarr *ptr, unsigned int i, int val) {
+  ptr->arr[i] = val;
 }
