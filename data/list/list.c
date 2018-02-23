@@ -1,3 +1,4 @@
+#include <ceduc/util/fmt.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -6,48 +7,51 @@ typedef struct {
   unsigned int len;
   size_t size;
   int arr[2];
-} dynarr;
+} list;
 
-unsigned int dynarr_push(dynarr **, int);
-unsigned int dynarr_pop(dynarr *);
-unsigned int dynarr_shift(dynarr *);
-unsigned int dynarr_unshift(dynarr **, int);
-int dynarr_get(dynarr *, unsigned int);
-unsigned int dynarr_set(dynarr *, unsigned int i, int val);
-char *dynarr_string(dynarr *);
-dynarr *dynarr_new();
+unsigned int list_push(list **, int);
+unsigned int list_pop(list *);
+unsigned int list_shift(list *);
+unsigned int list_unshift(list **, int);
+int list_get(list *, unsigned int);
+unsigned int list_set(list *, unsigned int i, int val);
+char *list_string(list *);
+list *list_new();
 
 int main() {
-  dynarr *arr = dynarr_new();
+  list *l = list_new();
 
-  if (arr == NULL) {
-    printf("failed to create a dynarr\n");
+  if (l == NULL) {
+    printf("failed to create a list\n");
     return 1;
   }
 
   for (int i = 0; i < 50; i++) {
-    unsigned int len = dynarr_push(&arr, i);
-    printf("\n(len:%d) %s\n", len, dynarr_string(arr));
+    unsigned int len = list_push(&l, i);
+    // printf("\n(len:%d) %s\n", len, list_string(arr));
+    printarr(l->arr, l->len);
   }
 
   for (int i = 0; i < 50; i++) {
-    unsigned int len = dynarr_shift(arr);
-    printf("\n(len:%d) %s\n", len, dynarr_string(arr));
+    unsigned int len = list_shift(l);
+    // printf("\n(len:%d) %s\n", len, list_string(arr));
+    printarr(l->arr, l->len);
   }
 
   for (int i = 0; i < 50; i++) {
-    unsigned int len = dynarr_unshift(&arr, i);
-    printf("\n(len:%d) %s\n", len, dynarr_string(arr));
+    unsigned int len = list_unshift(&l, i);
+    // printf("\n(len:%d) %s\n", len, list_string(arr));
+    printarr(l->arr, l->len);
   }
 
   return 0;
 }
 
-dynarr *dynarr_new() {
-  dynarr *ptr = (dynarr *)malloc(sizeof(dynarr));
+list *list_new() {
+  list *ptr = (list *)malloc(sizeof(list));
 
   if (ptr == NULL) {
-    printf("failed to create a dynamic array\n");
+    printf("failed to create a list\n");
     return NULL;
   }
 
@@ -56,11 +60,11 @@ dynarr *dynarr_new() {
   return ptr;
 }
 
-unsigned int dynarr_push(dynarr **ptr, int val) {
+unsigned int list_push(list **ptr, int val) {
   unsigned int cap = (*ptr)->size / sizeof((*ptr)->arr[0]);
 
   if ((*ptr)->len >= cap) {
-    dynarr *p = (dynarr *)realloc(*ptr, sizeof(dynarr) + (*ptr)->size * 2);
+    list *p = (list *)realloc(*ptr, sizeof(list) + (*ptr)->size * 2);
 
     if (p == NULL) {
       printf("failed to realloc memory");
@@ -75,7 +79,7 @@ unsigned int dynarr_push(dynarr **ptr, int val) {
   return ++(*ptr)->len;
 }
 
-char *dynarr_string(dynarr *ptr) {
+char *list_string(list *ptr) {
   char *str = (char *)malloc(ptr->len * 32);
 
   for (int i = 0; i < ptr->len; i++) {
@@ -87,12 +91,12 @@ char *dynarr_string(dynarr *ptr) {
   return str;
 }
 
-unsigned int dynarr_pop(dynarr *ptr) {
+unsigned int list_pop(list *ptr) {
   unsigned int cap = ptr->size / sizeof(ptr->arr[0]);
 
   if (ptr->len > 0) {
     if (ptr->len < cap / 2) {
-      dynarr *p = (dynarr *)realloc(ptr, ptr->size / 2);
+      list *p = (list *)realloc(ptr, ptr->size / 2);
 
       if (p == NULL) {
         printf("failed to realloc memory");
@@ -109,16 +113,16 @@ unsigned int dynarr_pop(dynarr *ptr) {
   return ptr->len;
 }
 
-unsigned int dynarr_shift(dynarr *ptr) {
+unsigned int list_shift(list *ptr) {
   for (unsigned int i = 1; i < ptr->len; i++) {
     ptr->arr[i - 1] = ptr->arr[i];
   }
 
-  return dynarr_pop(ptr);
+  return list_pop(ptr);
 }
 
-unsigned int dynarr_unshift(dynarr **ptr, int val) {
-  unsigned int len = dynarr_push(ptr, val);
+unsigned int list_unshift(list **ptr, int val) {
+  unsigned int len = list_push(ptr, val);
 
   if (len == 1) {
     return len;
@@ -132,7 +136,8 @@ unsigned int dynarr_unshift(dynarr **ptr, int val) {
   return len;
 }
 
-int dynarr_get(dynarr *ptr, unsigned int i) { return ptr->arr[i]; }
-unsigned int dynarr_set(dynarr *ptr, unsigned int i, int val) {
+int list_get(list *ptr, unsigned int i) { return ptr->arr[i]; }
+unsigned int list_set(list *ptr, unsigned int i, int val) {
   ptr->arr[i] = val;
+  return ptr->len;
 }

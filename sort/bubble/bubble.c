@@ -1,10 +1,10 @@
+#include <ceduc/util/fmt.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
 
 void fillarr(int[], int len);
 void sortarr(int[], int len);
-void printarr(int[], int len);
 void swap(int *, int *);
 
 int main() {
@@ -39,11 +39,4 @@ void sortarr(int arr[], int len) {
       }
     }
   }
-}
-
-void printarr(int arr[], int len) {
-  for (int i = 0; i < len; i++) {
-    printf("%d ", arr[i]);
-  }
-  printf("\n");
 }
