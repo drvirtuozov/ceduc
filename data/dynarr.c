@@ -21,15 +21,14 @@ dynarr_t *dynarr_new() {
   }
 
   ptr->len = 0;
-  ptr->size = sizeof(int[2]);
+  ptr->cap = 2;
   return ptr;
 }
 
 unsigned int __dynarr_push(dynarr_t **ptr, int val) {
-  unsigned int cap = (*ptr)->size / sizeof((*ptr)->arr[0]);
-
-  if ((*ptr)->len >= cap) {
-    size_t new_size = (*ptr)->size * 2;
+  if ((*ptr)->len >= (*ptr)->cap) {
+    unsigned int new_cap = (*ptr)->cap * 2;
+    size_t new_size = new_cap * sizeof((*ptr)->arr[0]);
     dynarr_t *p = (dynarr_t *)realloc(*ptr, sizeof(dynarr_t) + new_size);
 
     if (p == NULL) {
@@ -38,7 +37,7 @@ unsigned int __dynarr_push(dynarr_t **ptr, int val) {
     }
 
     *ptr = p;
-    (*ptr)->size = new_size;
+    (*ptr)->cap = new_cap;
   }
 
   (*ptr)->arr[(*ptr)->len] = val;
@@ -72,12 +71,12 @@ char *dynarr_string(dynarr_t *ptr) {
 }
 
 unsigned int __dynarr_pop(dynarr_t **ptr) {
-  unsigned int cap = (*ptr)->size / sizeof((*ptr)->arr[0]);
   unsigned int len = 0;
 
   if ((*ptr)->len > 0) {
-    if ((*ptr)->len < cap / 2) {
-      size_t new_size = (*ptr)->size / 2;
+    if ((*ptr)->len < (*ptr)->cap / 2) {
+      unsigned int new_cap = (*ptr)->cap / 2;
+      size_t new_size = new_cap * sizeof((*ptr)->arr[0]);
       dynarr_t *p = (dynarr_t *)realloc(*ptr, sizeof(dynarr_t) + new_size);
 
       if (p == NULL) {
@@ -86,7 +85,7 @@ unsigned int __dynarr_pop(dynarr_t **ptr) {
       }
 
       (*ptr) = p;
-      (*ptr)->size = new_size;
+      (*ptr)->cap = new_cap;
     }
 
     len = --(*ptr)->len;

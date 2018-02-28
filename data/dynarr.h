@@ -4,7 +4,7 @@
 typedef struct {
   pthread_mutex_t *mtx;
   unsigned int len;
-  size_t size;
+  unsigned int cap;
   int arr[2];
 } dynarr_t;
 
