@@ -27,7 +27,12 @@ dynarr_t *dynarr_new() {
 
 unsigned int __dynarr_push(dynarr_t **ptr, int val) {
   if ((*ptr)->len >= (*ptr)->cap) {
-    unsigned int new_cap = (*ptr)->cap * 2;
+    unsigned int new_cap = (*ptr)->cap;
+
+    while ((*ptr)->len >= new_cap) {
+      new_cap *= 2;
+    }
+
     size_t new_size = new_cap * sizeof((*ptr)->arr[0]);
     dynarr_t *p = (dynarr_t *)realloc(*ptr, sizeof(dynarr_t) + new_size);
 
@@ -138,17 +143,38 @@ unsigned int dynarr_unshift(dynarr_t **ptr, int val) {
   return len;
 }
 
+int __dynarr_get(dynarr_t *ptr, unsigned int i) {
+  if (ptr->len >= i) {
+    return ptr->arr[i];
+  }
+
+  return 0;
+}
+
 int dynarr_get(dynarr_t *ptr, unsigned int i) {
   pthread_mutex_lock(ptr->mtx);
-  int val = ptr->arr[i];
+  int val = __dynarr_get(ptr, i);
   pthread_mutex_unlock(ptr->mtx);
   return val;
 }
 
+unsigned int __dynarr_set(dynarr_t *ptr, unsigned int i, int val) {
+  if (ptr->cap <= i) {
+    ptr->len = i;
+    return __dynarr_push(&ptr, val);
+  }
+
+  if (ptr->len <= i) {
+    ptr->len = i + 1;
+  }
+
+  ptr->arr[i] = val;
+  return ptr->len;
+}
+
 unsigned int dynarr_set(dynarr_t *ptr, unsigned int i, int val) {
   pthread_mutex_lock(ptr->mtx);
-  ptr->arr[i] = val;
-  unsigned int len = ptr->len;
+  unsigned int len = __dynarr_set(ptr, i, val);
   pthread_mutex_unlock(ptr->mtx);
   return len;
 }

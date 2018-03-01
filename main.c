@@ -40,5 +40,11 @@ int main(int argc, char *argv[]) {
   sort_bubble(da->arr, da->len);
   printarr(da->arr, da->len);
 
+  printf("index: %d, value: %d\n", 666, dynarr_get(da, 666));
+
+  printf("setting index: 19, value: 19, len: %d, cap: %d\n",
+         dynarr_set(da, 19, 19), da->cap);
+  printarr(da->arr, da->len);
+
   return 0;
 }
