@@ -8,11 +8,11 @@ llist_node_t *llist_node_new(int val) {
   return ptr;
 }
 
-unsigned int llist_node_push(llist_node_t *head, int val) {
-  llist_node_t *new_node = llist_node_new(val);
+unsigned int llist_node_push(llist_node_t *head, llist_node_t *new_node) {
   unsigned int len = 2;
 
   if (head->next == NULL) {
+    new_node->prev = head;
     head->next = new_node;
     return len;
   }
@@ -24,6 +24,7 @@ unsigned int llist_node_push(llist_node_t *head, int val) {
     len++;
   }
 
+  new_node->prev = temp;
   temp->next = new_node;
   return ++len;
 }
