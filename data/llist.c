@@ -49,3 +49,21 @@ unsigned int llist_node_pop(llist_node_t *head) {
   free(temp);
   return len;
 }
+
+unsigned int llist_node_shift(llist_node_t *head) {
+  unsigned int len = 1;
+  *head = *head->next;
+
+  if (head == NULL) {
+    return --len;
+  }
+
+  llist_node_t *temp = head;
+
+  while (temp->next != NULL) {
+    temp = temp->next;
+    len++;
+  }
+
+  return len;
+}
