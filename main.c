@@ -84,6 +84,10 @@ int run_llist_tasks() {
     printlist(llist);
   }
 
-  free(llist); // memory leak
+  for (int i = 1; i < ARR_LEN; i++) {
+    printf("llist_node_pop len: %d\n", llist_node_pop(llist));
+    printlist(llist);
+  }
+
   return 0;
 }

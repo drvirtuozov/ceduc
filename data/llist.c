@@ -28,3 +28,24 @@ unsigned int llist_node_push(llist_node_t *head, llist_node_t *new_node) {
   temp->next = new_node;
   return ++len;
 }
+
+unsigned int llist_node_pop(llist_node_t *head) {
+  unsigned int len = 0;
+
+  if (head->next == NULL) {
+    head = NULL;
+    free(head);
+    return len;
+  }
+
+  llist_node_t *temp = head;
+
+  while (temp->next != NULL) {
+    temp = temp->next;
+    len++;
+  }
+
+  temp->prev->next = NULL;
+  free(temp);
+  return len;
+}
