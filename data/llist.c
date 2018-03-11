@@ -8,62 +8,68 @@ llist_node_t *llist_node_new(int val) {
   return ptr;
 }
 
-unsigned int llist_node_push(llist_node_t *head, llist_node_t *new_node) {
-  unsigned int len = 2;
-
-  if (head->next == NULL) {
-    new_node->prev = head;
-    head->next = new_node;
-    return len;
+llist_node_t *llist_node_gethead(llist_node_t *node) {
+  if (node == NULL) {
+    return node;
   }
 
-  llist_node_t *temp = head->next;
+  while (node->prev != NULL) {
+    node = node->prev;
+    // printf("gethead\n");
+  }
 
-  while (temp->next != NULL) {
-    temp = temp->next;
+  return node;
+}
+
+llist_node_t *llist_node_gettail(llist_node_t *node) {
+  if (node == NULL) {
+    return node;
+  }
+
+  while (node->next != NULL) {
+    node = node->next;
+    // printf("gettail\n");
+  }
+
+  return node;
+}
+
+unsigned int llist_node_getlen(llist_node_t *head) {
+  unsigned int len = 0;
+  head = llist_node_gethead(head);
+
+  if (head == NULL) {
+    return len;
+  } else {
     len++;
   }
 
-  new_node->prev = temp;
-  temp->next = new_node;
-  return ++len;
+  while (head->next != NULL) {
+    // printf("getlen\n");
+    head = head->next;
+    len++;
+  }
+
+  return len;
+}
+
+unsigned int llist_node_push(llist_node_t *head, llist_node_t *new_node) {
+  llist_node_t *tail = llist_node_gettail(head);
+  tail->next = new_node;
+  new_node->prev = tail;
+  return llist_node_getlen(head);
 }
 
 unsigned int llist_node_pop(llist_node_t *head) {
-  unsigned int len = 0;
-
-  if (head->next == NULL) {
-    head = NULL;
-    free(head);
-    return len;
-  }
-
-  llist_node_t *temp = head;
-
-  while (temp->next != NULL) {
-    temp = temp->next;
-    len++;
-  }
-
-  temp->prev->next = NULL;
-  free(temp);
-  return len;
+  llist_node_t *tail = llist_node_gettail(head);
+  tail->prev->next = NULL;
+  free(tail);
+  return llist_node_getlen(head);
 }
 
 unsigned int llist_node_shift(llist_node_t *head) {
-  unsigned int len = 1;
   *head = *head->next;
-
-  if (head == NULL) {
-    return --len;
-  }
-
-  llist_node_t *temp = head;
-
-  while (temp->next != NULL) {
-    temp = temp->next;
-    len++;
-  }
-
-  return len;
+  free(head->prev);
+  head->prev = NULL;
+  return llist_node_getlen(head);
 }
