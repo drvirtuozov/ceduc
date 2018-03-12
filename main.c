@@ -78,7 +78,7 @@ int run_llist_tasks() {
     return 1;
   }
 
-  for (int i = 1; i < ARR_LEN; i++) {
+  /* for (int i = 1; i < ARR_LEN; i++) {
     llist_node_t *new_node = llist_node_new(i);
     printf("llist_node_push len: %d\n", llist_node_push(llist, new_node));
     printlist(llist);
@@ -97,6 +97,12 @@ int run_llist_tasks() {
 
   for (int i = 1; i < ARR_LEN; i++) {
     printf("llist_node_shift len: %d\n", llist_node_shift(llist));
+    printlist(llist);
+  } */
+
+  for (int i = 1; i < ARR_LEN; i++) {
+    llist_node_t *new_node = llist_node_new(i);
+    printf("llist_node_unshift len: %d\n", llist_node_unshift(llist, new_node));
     printlist(llist);
   }
 

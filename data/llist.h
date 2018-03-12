@@ -8,8 +8,10 @@ typedef struct llist_node_t {
 } llist_node_t;
 
 llist_node_t *llist_node_new(int val);
+llist_node_t *llist_node_gethead(llist_node_t *node);
 unsigned int llist_node_push(llist_node_t *head, llist_node_t *new_node);
 unsigned int llist_node_pop(llist_node_t *head);
 unsigned int llist_node_shift(llist_node_t *head);
+unsigned int llist_node_unshift(llist_node_t *head, llist_node_t *new_node);
 
 #endif
