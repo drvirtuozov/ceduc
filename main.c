@@ -78,31 +78,38 @@ int run_llist_tasks() {
     return 1;
   }
 
-  /* for (int i = 1; i < ARR_LEN; i++) {
+  for (int i = 1; i < ARR_LEN; i++) {
     llist_node_t *new_node = llist_node_new(i);
-    printf("llist_node_push len: %d\n", llist_node_push(llist, new_node));
+    llist_node_push(llist, new_node);
+    printf("llist_node_push len: %d\n", llist_node_getlen(llist));
     printlist(llist);
   }
 
   for (int i = 1; i < ARR_LEN; i++) {
-    printf("llist_node_pop len: %d\n", llist_node_pop(llist));
+    llist_node_t *last = llist_node_pop(llist);
+    printf("llist_node_pop len: %d\n", llist_node_getlen(llist));
     printlist(llist);
+    free(last);
   }
 
   for (int i = 1; i < ARR_LEN; i++) {
     llist_node_t *new_node = llist_node_new(i);
-    printf("llist_node_push len: %d\n", llist_node_push(llist, new_node));
+    llist_node_push(llist, new_node);
+    printf("llist_node_push len: %d\n", llist_node_getlen(llist));
     printlist(llist);
   }
 
   for (int i = 1; i < ARR_LEN; i++) {
-    printf("llist_node_shift len: %d\n", llist_node_shift(llist));
+    llist_node_t *first = llist_node_shift(llist);
+    printf("llist_node_shift len: %d\n", llist_node_getlen(llist));
     printlist(llist);
-  } */
+    free(first);
+  }
 
   for (int i = 1; i < ARR_LEN; i++) {
     llist_node_t *new_node = llist_node_new(i);
-    printf("llist_node_unshift len: %d\n", llist_node_unshift(llist, new_node));
+    llist_node_unshift(llist, new_node);
+    printf("llist_node_unshift len: %d\n", llist_node_getlen(llist));
     printlist(llist);
   }
 

@@ -15,7 +15,6 @@ llist_node_t *llist_node_gethead(llist_node_t *node) {
 
   while (node->prev != NULL) {
     node = node->prev;
-    // printf("gethead\n");
   }
 
   return node;
@@ -28,7 +27,6 @@ llist_node_t *llist_node_gettail(llist_node_t *node) {
 
   while (node->next != NULL) {
     node = node->next;
-    // printf("gettail\n");
   }
 
   return node;
@@ -36,6 +34,7 @@ llist_node_t *llist_node_gettail(llist_node_t *node) {
 
 unsigned int llist_node_getlen(llist_node_t *head) {
   unsigned int len = 0;
+  head = llist_node_gethead(head);
 
   if (head == NULL) {
     return len;
@@ -44,7 +43,6 @@ unsigned int llist_node_getlen(llist_node_t *head) {
   }
 
   while (head->next != NULL) {
-    // printf("getlen\n");
     head = head->next;
     len++;
   }
@@ -52,30 +50,30 @@ unsigned int llist_node_getlen(llist_node_t *head) {
   return len;
 }
 
-unsigned int llist_node_push(llist_node_t *head, llist_node_t *new_node) {
+llist_node_t *llist_node_push(llist_node_t *head, llist_node_t *new_node) {
   llist_node_t *tail = llist_node_gettail(head);
   tail->next = new_node;
   new_node->prev = tail;
-  return llist_node_getlen(head);
+  return llist_node_gethead(head);
 }
 
-unsigned int llist_node_pop(llist_node_t *head) {
+llist_node_t *llist_node_pop(llist_node_t *head) {
   llist_node_t *tail = llist_node_gettail(head);
   tail->prev->next = NULL;
-  free(tail);
-  return llist_node_getlen(head);
+  return tail;
 }
 
-unsigned int llist_node_shift(llist_node_t *head) {
+llist_node_t *llist_node_shift(llist_node_t *head) {
+  head = llist_node_gethead(head);
+  llist_node_t *prev = head->prev;
   *head = *head->next;
-  free(head->prev);
   head->prev = NULL;
-  return llist_node_getlen(head);
+  return prev;
 }
 
-unsigned int llist_node_unshift(llist_node_t *head, llist_node_t *new_node) {
+llist_node_t *llist_node_unshift(llist_node_t *head, llist_node_t *new_node) {
   head = llist_node_gethead(head);
   new_node->next = head;
   head->prev = new_node;
-  return llist_node_getlen(head);
+  return head;
 }
