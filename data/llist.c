@@ -1,4 +1,5 @@
 #include <ceduc/data/llist.h>
+#include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -90,4 +91,19 @@ llist_node_t *llist_node_get(llist_node_t *node, unsigned int index) {
   }
 
   return node;
+}
+
+bool llist_node_set(llist_node_t *node, unsigned int index, int val) {
+  node = llist_node_gethead(node);
+
+  for (unsigned int i = 0; i < index; i++) {
+    if (node->next != NULL) {
+      node = node->next;
+    } else {
+      return false;
+    }
+  }
+
+  node->data = val;
+  return true;
 }
