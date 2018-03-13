@@ -113,5 +113,8 @@ int run_llist_tasks() {
     printlist(llist);
   }
 
+  printf("llist_node_get index: %d, value: %d\n", 6,
+         llist_node_get(llist, 6)->data);
+
   return 0;
 }

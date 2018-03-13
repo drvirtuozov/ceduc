@@ -77,3 +77,17 @@ llist_node_t *llist_node_unshift(llist_node_t *head, llist_node_t *new_node) {
   head->prev = new_node;
   return head;
 }
+
+llist_node_t *llist_node_get(llist_node_t *node, unsigned int index) {
+  node = llist_node_gethead(node);
+
+  for (unsigned int i = 0; i < index; i++) {
+    if (node->next != NULL) {
+      node = node->next;
+    } else {
+      return NULL;
+    }
+  }
+
+  return node;
+}
