@@ -13,11 +13,12 @@ int run_llist_tasks();
 
 int main(int argc, char *argv[]) {
   int err = 0;
-  /* err = run_dynarr_tasks();
+
+  err = run_dynarr_tasks();
 
   if (err != 0) {
     return err;
-  } */
+  }
 
   err = run_llist_tasks();
 
@@ -37,36 +38,36 @@ int run_dynarr_tasks() {
   }
 
   for (int i = 0; i < ARR_LEN; i++) {
-    printf("pushing to dynarr...\n");
-    unsigned int len = dynarr_push(&dynarr, i);
-    // printf("\n(len:%d) %s\n", len, dynarr_string(arr));
-    printarr(dynarr->arr, dynarr->len);
+    printf("dynarr_push len: %d\n", dynarr_push(dynarr, i));
+    printarr(dynarr->data, dynarr->len);
   }
 
   for (int i = 0; i < ARR_LEN; i++) {
-    printf("shifting from dynarr...\n");
-    unsigned int len = dynarr_shift(dynarr);
-    // printf("\n(len:%d) %s\n", len, dynarr_string(arr));
-    printarr(dynarr->arr, dynarr->len);
+    printf("dynarr_pop len: %d\n", dynarr_pop(dynarr));
+    printarr(dynarr->data, dynarr->len);
   }
 
   for (int i = 0; i < ARR_LEN; i++) {
-    printf("unshifting to dynarr...\n");
-    unsigned int len = dynarr_unshift(&dynarr, i);
-    // printf("\n(len:%d) %s\n", len, dynarr_string(arr));
-    printarr(dynarr->arr, dynarr->len);
+    printf("dynarr_unshift len: %d\n", dynarr_unshift(dynarr, i));
+    printarr(dynarr->data, dynarr->len);
   }
 
-  printf("bubble sorting dynarr...\n");
-  sort_bubble(dynarr->arr, dynarr->len);
-  printarr(dynarr->arr, dynarr->len);
+  printf("sort_bubble dynarr...\n");
+  sort_bubble(dynarr->data, dynarr->len);
+  printarr(dynarr->data, dynarr->len);
 
   printf("dynarr_get index: %d, value: %d\n", 12, dynarr_get(dynarr, 12));
 
   printf("dynarr_set index: 6, value: 666, len: %d, cap: %d\n",
          dynarr_set(dynarr, 6, 666), dynarr->cap);
-  printarr(dynarr->arr, dynarr->len);
-  free(dynarr);
+  printarr(dynarr->data, dynarr->len);
+
+  for (int i = 0; i < ARR_LEN; i++) {
+    printf("dynarr_shift len: %d\n", dynarr_shift(dynarr));
+    printarr(dynarr->data, dynarr->len);
+  }
+
+  // dynarr_delete(dynarr);
   return 0;
 }
 
