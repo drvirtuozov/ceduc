@@ -38,12 +38,13 @@ int run_dynarr_tasks() {
   }
 
   for (int i = 0; i < ARR_LEN; i++) {
-    printf("dynarr_push len: %d\n", dynarr_push(dynarr, i));
+    printf("dynarr_push len: %d, cap: %d\n", dynarr_push(dynarr, i),
+           dynarr->cap);
     printarr(dynarr->data, dynarr->len);
   }
 
   for (int i = 0; i < ARR_LEN; i++) {
-    printf("dynarr_pop len: %d\n", dynarr_pop(dynarr));
+    printf("dynarr_pop len: %d, cap: %d\n", dynarr_pop(dynarr), dynarr->cap);
     printarr(dynarr->data, dynarr->len);
   }
 
@@ -67,7 +68,7 @@ int run_dynarr_tasks() {
     printarr(dynarr->data, dynarr->len);
   }
 
-  // dynarr_delete(dynarr);
+  dynarr_delete(dynarr);
   return 0;
 }
 

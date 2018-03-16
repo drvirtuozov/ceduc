@@ -1,6 +1,8 @@
 #include <pthread.h>
 #include <stdlib.h>
 
+#define DYNARR_MIN_CAP 2
+
 typedef struct {
   pthread_mutex_t *mtx;
   unsigned int len;

@@ -13,16 +13,15 @@ dynarr_t *dynarr_new() {
     return NULL;
   }
 
-  int mtx_res = pthread_mutex_init(ptr->mtx, NULL);
-
-  if (mtx_res != 0) {
+  if (pthread_mutex_init(ptr->mtx, NULL)) {
     fprintf(stderr, "dynarr: unable to initalize a mutex\n");
+    free(ptr);
     return NULL;
   }
 
   ptr->len = 0;
-  ptr->cap = 2;
-  ptr->data = malloc(sizeof(*ptr->data) * ptr->cap);
+  ptr->cap = DYNARR_MIN_CAP;
+  ptr->data = calloc(ptr->cap, sizeof(*ptr->data));
 
   if (ptr->data == NULL) {
     fprintf(stderr, "dynarr: failed to malloc for data\n");
@@ -35,7 +34,9 @@ dynarr_t *dynarr_new() {
 void dynarr_delete(dynarr_t *ptr) {
   pthread_mutex_destroy(ptr->mtx);
   free(ptr->data);
+  ptr->data = NULL;
   free(ptr);
+  ptr = NULL;
 }
 
 unsigned int __dynarr_push(dynarr_t *ptr, int val) {
@@ -43,7 +44,7 @@ unsigned int __dynarr_push(dynarr_t *ptr, int val) {
     unsigned int new_cap = ptr->cap;
 
     while (ptr->len >= new_cap) {
-      new_cap *= 2;
+      new_cap <<= 1;
     }
 
     int *p = realloc(ptr->data, sizeof(*ptr->data) * new_cap);
@@ -69,11 +70,10 @@ unsigned int dynarr_push(dynarr_t *ptr, int val) {
 }
 
 unsigned int __dynarr_pop(dynarr_t *ptr) {
-  unsigned int len = 0;
-
   if (ptr->len > 0) {
-    if (ptr->len < ptr->cap / 2) {
-      unsigned int new_cap = ptr->cap / 2;
+    unsigned int new_cap = ptr->cap >> 1;
+
+    if (ptr->len - 1 <= new_cap && new_cap >= DYNARR_MIN_CAP) {
       int *p = realloc(ptr->data, sizeof(*ptr->data) * new_cap);
 
       if (p == NULL) {
@@ -85,10 +85,10 @@ unsigned int __dynarr_pop(dynarr_t *ptr) {
       ptr->cap = new_cap;
     }
 
-    len = --ptr->len;
+    return --ptr->len;
   }
 
-  return len;
+  return ptr->len;
 }
 
 unsigned int dynarr_pop(dynarr_t *ptr) {
