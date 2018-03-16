@@ -4,8 +4,10 @@
 #include <stdlib.h>
 
 llist_node_t *llist_node_new(int val) {
-  llist_node_t *ptr = (llist_node_t *)malloc(sizeof(llist_node_t));
+  llist_node_t *ptr = malloc(sizeof(llist_node_t));
   ptr->data = val;
+  ptr->prev = NULL;
+  ptr->next = NULL;
   return ptr;
 }
 
