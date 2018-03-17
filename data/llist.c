@@ -11,7 +11,7 @@ llist_node_t *llist_node_new(int val) {
   return ptr;
 }
 
-llist_node_t *llist_node_gethead(llist_node_t *node) {
+llist_node_t *llist_gethead(llist_node_t *node) {
   if (node == NULL) {
     return node;
   }
@@ -23,7 +23,7 @@ llist_node_t *llist_node_gethead(llist_node_t *node) {
   return node;
 }
 
-llist_node_t *llist_node_gettail(llist_node_t *node) {
+llist_node_t *llist_gettail(llist_node_t *node) {
   if (node == NULL) {
     return node;
   }
@@ -35,9 +35,9 @@ llist_node_t *llist_node_gettail(llist_node_t *node) {
   return node;
 }
 
-unsigned int llist_node_getlen(llist_node_t *head) {
+unsigned int llist_getlen(llist_node_t *head) {
   unsigned int len = 0;
-  head = llist_node_gethead(head);
+  head = llist_gethead(head);
 
   if (head == NULL) {
     return len;
@@ -53,36 +53,70 @@ unsigned int llist_node_getlen(llist_node_t *head) {
   return len;
 }
 
-llist_node_t *llist_node_push(llist_node_t *head, llist_node_t *new_node) {
-  llist_node_t *tail = llist_node_gettail(head);
+llist_node_t *llist_push(llist_node_t **head, llist_node_t *new_node) {
+  if (*head == NULL) {
+    *head = new_node;
+    return new_node;
+  }
+
+  llist_node_t *tail = llist_gettail(*head);
   tail->next = new_node;
   new_node->prev = tail;
-  return llist_node_gethead(head);
+  return llist_gethead(*head);
 }
 
-llist_node_t *llist_node_pop(llist_node_t *head) {
-  llist_node_t *tail = llist_node_gettail(head);
-  tail->prev->next = NULL;
+llist_node_t *llist_pop(llist_node_t **head) {
+  if (*head == NULL) {
+    return *head;
+  }
+
+  llist_node_t *tail = llist_gettail(*head);
+
+  if (tail->prev != NULL) {
+    tail->prev->next = NULL;
+  } else {
+    *head = NULL;
+  }
+
   return tail;
 }
 
-llist_node_t *llist_node_shift(llist_node_t *head) {
-  head = llist_node_gethead(head);
-  llist_node_t *prev = head->prev;
-  *head = *head->next;
-  head->prev = NULL;
-  return prev;
-}
+llist_node_t *llist_shift(llist_node_t **node) {
+  if (*node == NULL) {
+    return *node;
+  }
 
-llist_node_t *llist_node_unshift(llist_node_t *head, llist_node_t *new_node) {
-  head = llist_node_gethead(head);
-  new_node->next = head;
-  head->prev = new_node;
+  llist_node_t *head = llist_gethead(*node);
+
+  if (head->next != NULL) {
+    head->next->prev = NULL;
+    *node = head->next;
+  } else {
+    *node = NULL;
+  }
+
   return head;
 }
 
-llist_node_t *llist_node_get(llist_node_t *node, unsigned int index) {
-  node = llist_node_gethead(node);
+llist_node_t *llist_unshift(llist_node_t **node, llist_node_t *new_node) {
+  if (*node == NULL) {
+    *node = new_node;
+    return new_node;
+  }
+
+  llist_node_t *head = llist_gethead(*node);
+  head->prev = new_node;
+  new_node->next = head;
+  *node = new_node;
+  return new_node;
+}
+
+llist_node_t *llist_get(llist_node_t *node, unsigned int index) {
+  if (node == NULL) {
+    return node;
+  }
+
+  node = llist_gethead(node);
 
   for (unsigned int i = 0; i < index; i++) {
     if (node->next != NULL) {
@@ -95,8 +129,12 @@ llist_node_t *llist_node_get(llist_node_t *node, unsigned int index) {
   return node;
 }
 
-bool llist_node_set(llist_node_t *node, unsigned int index, int val) {
-  node = llist_node_gethead(node);
+bool llist_set(llist_node_t *node, unsigned int index, int val) {
+  if (node == NULL) {
+    return node;
+  }
+
+  node = llist_gethead(node);
 
   for (unsigned int i = 0; i < index; i++) {
     if (node->next != NULL) {
@@ -108,4 +146,19 @@ bool llist_node_set(llist_node_t *node, unsigned int index, int val) {
 
   node->data = val;
   return true;
+}
+
+void llist_destroy(llist_node_t **node) {
+  llist_node_t *head = llist_gethead(*node);
+
+  if (head != NULL) {
+    while (head->next != NULL) {
+      head = head->next;
+      free(head->prev);
+      head->prev = NULL;
+    }
+
+    free(head);
+    *node = NULL;
+  }
 }

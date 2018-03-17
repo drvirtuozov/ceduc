@@ -10,12 +10,15 @@ void printarr(int arr[], int len) {
 }
 
 void printlist(llist_node_t *head) {
-  head = llist_node_gethead(head);
-  printf("%d ", head->data);
+  head = llist_gethead(head);
 
-  while (head->next != NULL) {
-    head = head->next;
+  if (head != NULL) {
     printf("%d ", head->data);
+
+    while (head->next != NULL) {
+      head = head->next;
+      printf("%d ", head->data);
+    }
   }
 
   printf("\n");
