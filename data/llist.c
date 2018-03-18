@@ -148,6 +148,30 @@ bool llist_set(llist_node_t *node, unsigned int index, int val) {
   return true;
 }
 
+bool llist_add(llist_node_t *node, unsigned int index, llist_node_t *new_node) {
+  if (node == NULL) {
+    return node;
+  }
+
+  node = llist_gethead(node);
+
+  for (unsigned int i = 0; i < index; i++) {
+    if (node->next != NULL) {
+      node = node->next;
+    } else {
+      return false;
+    }
+  }
+
+  llist_node_t *prev_temp = node->prev;
+  llist_node_t *next_temp = node;
+  prev_temp->next = new_node;
+  new_node->prev = prev_temp;
+  new_node->next = next_temp;
+  next_temp->prev = new_node;
+  return true;
+}
+
 void llist_destroy(llist_node_t **node) {
   llist_node_t *head = llist_gethead(*node);
 

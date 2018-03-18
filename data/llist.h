@@ -14,6 +14,7 @@ llist_node_t *llist_gethead(llist_node_t *node);
 llist_node_t *llist_gettail(llist_node_t *node);
 llist_node_t *llist_get(llist_node_t *node, unsigned int i);
 bool llist_set(llist_node_t *node, unsigned int i, int val);
+bool llist_add(llist_node_t *node, unsigned int i, llist_node_t *new_node);
 unsigned int llist_getlen(llist_node_t *node);
 llist_node_t *llist_push(llist_node_t **node, llist_node_t *new_node);
 llist_node_t *llist_pop(llist_node_t **node);

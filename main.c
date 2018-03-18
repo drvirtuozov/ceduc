@@ -108,11 +108,16 @@ int run_llist_tasks() {
   }
 
   printf("llist_get index: %d, value: %d\n", 6, llist_get(llist, 6)->data);
-
-  printf("llist_set index: %d, value: 13, result: %d\n", 6,
-         llist_set(llist, 6, 13));
-
   printlist(llist);
+
+  printf("llist_set index: %d, value: 13, result: %d, len: %d\n", 6,
+         llist_set(llist, 6, 13), llist_getlen(llist));
+  printlist(llist);
+
+  printf("llist_add index: %d, value: 666, result: %d, len: %d\n", 6,
+         llist_add(llist, 6, llist_node_new(666)), llist_getlen(llist));
+  printlist(llist);
+
   llist_destroy(&llist);
   printlist(llist);
   return 0;
