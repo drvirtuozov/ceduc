@@ -1,3 +1,4 @@
+#include <ceduc/data/alist.h>
 #include <ceduc/data/dynarr.h>
 #include <ceduc/data/llist.h>
 #include <ceduc/sort/bubble.h>
@@ -10,6 +11,7 @@
 
 int run_dynarr_tasks();
 int run_llist_tasks();
+int run_alist_tasks();
 
 int main(int argc, char *argv[]) {
   int err = 0;
@@ -21,6 +23,12 @@ int main(int argc, char *argv[]) {
   }
 
   err = run_llist_tasks();
+
+  if (err != 0) {
+    return err;
+  }
+
+  err = run_alist_tasks();
 
   if (err != 0) {
     return err;
@@ -120,5 +128,23 @@ int run_llist_tasks() {
 
   llist_destroy(&llist);
   printlist(llist);
+  return 0;
+}
+
+int run_alist_tasks() {
+  alist_node_t *alist = NULL;
+
+  for (int i = 0; i < ARR_LEN; i++) {
+    int kascii = i + 97;
+    int vascii = i + 65;
+    char *key = (char *)&kascii;
+    char *val = (char *)&vascii;
+    alist_node_t *node = alist_add(&alist, key, val);
+    printf("alist_add key: %s, val: %s, len: %d\n", node->key, node->value,
+           alist_getlen(alist));
+    // printf("alist_get key: %s, val: %s\n", key, alist_get(alist,
+    // key)->value);
+  }
+
   return 0;
 }
