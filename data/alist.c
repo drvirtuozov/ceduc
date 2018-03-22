@@ -5,14 +5,18 @@
 
 alist_node_t *alist_node_new(char *key, char *val) {
   alist_node_t *ptr = malloc(sizeof(alist_node_t));
+  char *k = malloc(sizeof(char *));
+  char *v = malloc(sizeof(char *));
+  strcpy(k, key);
+  strcpy(v, val);
 
   if (ptr == NULL) {
     fprintf(stderr, "alist: failed to create");
     return ptr;
   }
 
-  ptr->key = key;
-  ptr->value = val;
+  ptr->key = k;
+  ptr->value = v;
   ptr->next = NULL;
   return ptr;
 }
@@ -26,24 +30,22 @@ alist_node_t *alist_add(alist_node_t **node, char *key, char *val) {
   }
 
   alist_node_t *temp = *node;
-  printf("temp->key: %s, key: %s\n", temp->key, key);
-  if (!strcmp(temp->key, key)) {
-    temp->value = val;
-    return temp;
-  }
 
-  while (temp->next != NULL) {
-    temp = temp->next;
-
-    if (!strcmp(temp->key, key)) {
-      temp->value = val;
+  do {
+    if (!strcmp(temp->key, new_node->key)) {
+      temp->value = new_node->value;
       return temp;
     }
-  }
+
+    if (temp->next == NULL) {
+      break;
+    }
+
+    temp = temp->next;
+  } while (temp->next != NULL);
 
   temp->next = new_node;
-  printf("temp->next == null: %d\n", temp->next == NULL);
-  return temp->next;
+  return new_node;
 }
 
 alist_node_t *alist_get(alist_node_t *node, char *key) {
@@ -51,13 +53,13 @@ alist_node_t *alist_get(alist_node_t *node, char *key) {
     return node;
   }
 
-  do {
+  while (node != NULL) {
     if (!strcmp(node->key, key)) {
       return node;
     }
 
     node = node->next;
-  } while (node->next != NULL);
+  }
 
   return NULL;
 }

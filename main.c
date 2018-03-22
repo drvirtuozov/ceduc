@@ -139,11 +139,10 @@ int run_alist_tasks() {
     int vascii = i + 65;
     char *key = (char *)&kascii;
     char *val = (char *)&vascii;
-    alist_node_t *node = alist_add(&alist, key, val);
-    printf("alist_add key: %s, val: %s, len: %d\n", node->key, node->value,
+    alist_add(&alist, key, val);
+    printf("alist_add key: %s, val: %s, len: %d\n", key, val,
            alist_getlen(alist));
-    // printf("alist_get key: %s, val: %s\n", key, alist_get(alist,
-    // key)->value);
+    printf("alist_get key: %s, val: %s\n", key, alist_get(alist, key)->value);
   }
 
   return 0;
