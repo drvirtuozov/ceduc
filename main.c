@@ -4,8 +4,10 @@
 #include <ceduc/sort/bubble.h>
 #include <ceduc/util/fmt.h>
 #include <ceduc/util/sort.h>
+#include <locale.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <wchar.h>
 
 #define ARR_LEN 13
 
@@ -132,17 +134,23 @@ int run_llist_tasks() {
 }
 
 int run_alist_tasks() {
+  setlocale(LC_ALL, "");
   alist_node_t *alist = NULL;
 
   for (int i = 0; i < ARR_LEN; i++) {
-    int kascii = i + 97;
-    int vascii = i + 65;
-    char *key = (char *)&kascii;
-    char *val = (char *)&vascii;
+    static wchar_t key[] = L"а";
+    static wchar_t val[] = L"А";
     alist_add(&alist, key, val);
-    printf("alist_add key: %s, val: %s, len: %d\n", key, val,
+    printf("alist_add key: %ls, val: %ls, len: %d\n", key, val,
            alist_getlen(alist));
-    printf("alist_get key: %s, val: %s\n", key, alist_get(alist, key)->value);
+    (*key)++;
+    (*val)++;
+  }
+
+  for (int i = 0; i < ARR_LEN; i++) {
+    static wchar_t key[] = L"а";
+    printf("alist_get key: %ls, val: %ls\n", key, alist_get(alist, key)->value);
+    (*key)++;
   }
 
   return 0;

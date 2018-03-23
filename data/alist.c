@@ -1,27 +1,25 @@
 #include <ceduc/data/alist.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
+#include <wchar.h>
 
-alist_node_t *alist_node_new(char *key, char *val) {
+alist_node_t *alist_node_new(wchar_t *key, wchar_t *val) {
   alist_node_t *ptr = malloc(sizeof(alist_node_t));
-  char *k = malloc(sizeof(char *));
-  char *v = malloc(sizeof(char *));
-  strcpy(k, key);
-  strcpy(v, val);
+  wchar_t *k = malloc(wcslen(key) + 1);
+  wchar_t *v = malloc(wcslen(val) + 1);
 
   if (ptr == NULL) {
     fprintf(stderr, "alist: failed to create");
     return ptr;
   }
 
-  ptr->key = k;
-  ptr->value = v;
+  ptr->key = wcscpy(k, key);
+  ptr->value = wcscpy(v, val);
   ptr->next = NULL;
   return ptr;
 }
 
-alist_node_t *alist_add(alist_node_t **node, char *key, char *val) {
+alist_node_t *alist_add(alist_node_t **node, wchar_t *key, wchar_t *val) {
   alist_node_t *new_node = alist_node_new(key, val);
 
   if (*node == NULL) {
@@ -32,7 +30,7 @@ alist_node_t *alist_add(alist_node_t **node, char *key, char *val) {
   alist_node_t *temp = *node;
 
   do {
-    if (!strcmp(temp->key, new_node->key)) {
+    if (!wcscmp(temp->key, new_node->key)) {
       temp->value = new_node->value;
       return temp;
     }
@@ -48,13 +46,13 @@ alist_node_t *alist_add(alist_node_t **node, char *key, char *val) {
   return new_node;
 }
 
-alist_node_t *alist_get(alist_node_t *node, char *key) {
+alist_node_t *alist_get(alist_node_t *node, wchar_t *key) {
   if (node == NULL) {
     return node;
   }
 
   while (node != NULL) {
-    if (!strcmp(node->key, key)) {
+    if (!wcscmp(node->key, key)) {
       return node;
     }
 
