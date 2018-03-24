@@ -78,3 +78,30 @@ unsigned int alist_getlen(alist_node_t *node) {
 
   return len;
 }
+
+alist_node_t *alist_delete(alist_node_t **head, wchar_t *key) {
+  if (*head == NULL) {
+    return *head;
+  }
+
+  alist_node_t *node = *head;
+
+  if (!wcscmp(node->key, key)) {
+    *head = node->next;
+    return node;
+  }
+
+  alist_node_t *prev = NULL;
+
+  while (node->next != NULL) {
+    if (!wcscmp(node->key, key)) {
+      prev->next = node->next;
+      return node;
+    }
+
+    prev = node;
+    node = node->next;
+  }
+
+  return NULL;
+}
