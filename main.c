@@ -2,6 +2,7 @@
 #include <ceduc/data/dynarr.h>
 #include <ceduc/data/llist.h>
 #include <ceduc/sort/bubble.h>
+#include <ceduc/sort/select.h>
 #include <ceduc/util/fmt.h>
 #include <ceduc/util/sort.h>
 #include <locale.h>
@@ -11,12 +12,19 @@
 
 #define ARR_LEN 13
 
+int run_sort_tasks();
 int run_dynarr_tasks();
 int run_llist_tasks();
 int run_alist_tasks();
 
 int main(int argc, char *argv[]) {
   int err = 0;
+
+  err = run_sort_tasks();
+
+  if (err != 0) {
+    return err;
+  }
 
   err = run_dynarr_tasks();
 
@@ -37,6 +45,27 @@ int main(int argc, char *argv[]) {
   }
 
   return err;
+}
+
+int run_sort_tasks() {
+  int arr[ARR_LEN];
+
+  fillarr(arr, ARR_LEN);
+  printarr(arr, ARR_LEN);
+  printf("sort_bubble...\n");
+  sort_bubble(arr, ARR_LEN);
+  printarr(arr, ARR_LEN);
+
+  printf("\n");
+
+  fillarr(arr, ARR_LEN);
+  printarr(arr, ARR_LEN);
+  printf("sort_selection...\n");
+  sort_selection(arr, ARR_LEN);
+  printarr(arr, ARR_LEN);
+
+  printf("\n");
+  return 0;
 }
 
 int run_dynarr_tasks() {
@@ -63,10 +92,6 @@ int run_dynarr_tasks() {
            dynarr->cap);
     printarr(dynarr->data, dynarr->len);
   }
-
-  printf("sort_bubble dynarr...\n");
-  sort_bubble(dynarr->data, dynarr->len);
-  printarr(dynarr->data, dynarr->len);
 
   printf("dynarr_get index: %d, value: %d\n", 12, dynarr_get(dynarr, 12));
 
@@ -159,6 +184,6 @@ int run_alist_tasks() {
   printf("got value: %ls\n", alist_get(alist, key2)->value);
   wchar_t *key3 = L"в";
   printf("got value: %ls\n", alist_get(alist, key3)->value);
-  printf("got value: %ls\n", alist_get(alist, key)->value);
+  printf("got value: %p\n", alist_get(alist, key));
   return 0;
 }

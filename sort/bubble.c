@@ -1,5 +1,3 @@
-#include <ceduc/sort/bubble.h>
-#include <ceduc/util/fmt.h>
 #include <ceduc/util/sort.h>
 
 void sort_bubble(int arr[], int len) {
