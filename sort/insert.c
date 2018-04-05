@@ -2,10 +2,14 @@
 
 void sort_insertion(int arr[], int len) {
   for (int i = 0; i < len; i++) {
-    for (int j = len - 1; j > i; j--) {
-      if (arr[j - 1] > arr[j]) {
-        swap(&arr[j - 1], &arr[j]);
-      }
+    int j = i - 1;
+    int tmp = arr[i];
+
+    while (j >= 0 && arr[j] > tmp) {
+      arr[j + 1] = arr[j];
+      j--;
     }
+
+    arr[j + 1] = tmp;
   }
 }
