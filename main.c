@@ -2,6 +2,7 @@
 #include <ceduc/data/dynarr.h>
 #include <ceduc/data/llist.h>
 #include <ceduc/sort/bubble.h>
+#include <ceduc/sort/insert.h>
 #include <ceduc/sort/select.h>
 #include <ceduc/util/fmt.h>
 #include <ceduc/util/sort.h>
@@ -62,6 +63,14 @@ int run_sort_tasks() {
   printarr(arr, ARR_LEN);
   printf("sort_selection...\n");
   sort_selection(arr, ARR_LEN);
+  printarr(arr, ARR_LEN);
+
+  printf("\n");
+
+  fillarr(arr, ARR_LEN);
+  printarr(arr, ARR_LEN);
+  printf("sort_insertion...\n");
+  sort_insertion(arr, ARR_LEN);
   printarr(arr, ARR_LEN);
 
   printf("\n");
