@@ -11,3 +11,4 @@ alist_node_t *alist_add(alist_node_t **node, wchar_t *key, wchar_t *val);
 alist_node_t *alist_get(alist_node_t *node, wchar_t *key);
 alist_node_t *alist_delete(alist_node_t **node, wchar_t *key);
 unsigned int alist_getlen(alist_node_t *node);
+void alist_destroy(alist_node_t **node);

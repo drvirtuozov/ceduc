@@ -188,11 +188,13 @@ int run_alist_tasks() {
   }
 
   wchar_t *key = L"б";
-  printf("got value: %ls\n", alist_delete(&alist, key)->value);
+  printf("get key: %ls, got value: %ls\n", key,
+         alist_delete(&alist, key)->value);
   wchar_t *key2 = L"а";
-  printf("got value: %ls\n", alist_get(alist, key2)->value);
+  printf("get key: %ls, got value: %ls\n", key2, alist_get(alist, key2)->value);
   wchar_t *key3 = L"в";
-  printf("got value: %ls\n", alist_get(alist, key3)->value);
-  printf("got value: %p\n", alist_get(alist, key));
+  printf("get key: %ls, got value: %ls\n", key3, alist_get(alist, key3)->value);
+  printf("get key: %ls, got value: %p\n", key, alist_get(alist, key));
+  alist_destroy(&alist);
   return 0;
 }

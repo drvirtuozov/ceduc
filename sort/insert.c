@@ -1,5 +1,3 @@
-#include <ceduc/util/sort.h>
-
 void sort_insertion(int arr[], int len) {
   for (int i = 0; i < len; i++) {
     int j = i - 1;

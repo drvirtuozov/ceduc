@@ -105,3 +105,17 @@ alist_node_t *alist_delete(alist_node_t **head, wchar_t *key) {
 
   return NULL;
 }
+
+void alist_destroy(alist_node_t **node) {
+  alist_node_t *head = *node;
+
+  while (head != NULL) {
+    free(head->key);
+    free(head->value);
+    free(head);
+    head = head->next;
+  }
+
+  free(head);
+  *node = NULL;
+}
